@@ -19,17 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
 function initNavbar() {
     const navbar = document.getElementById('navbar');
     let lastScroll = 0;
-    
+
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
-        
+
         // Add/remove scrolled class
         if (currentScroll > 50) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
-        
+
         lastScroll = currentScroll;
     });
 }
@@ -40,13 +40,13 @@ function initNavbar() {
 function initMobileMenu() {
     const menuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.getElementById('navLinks');
-    
+
     if (menuBtn && navLinks) {
         menuBtn.addEventListener('click', () => {
             menuBtn.classList.toggle('active');
             navLinks.classList.toggle('active');
         });
-        
+
         // Close menu when clicking a link
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
@@ -66,14 +66,14 @@ function initScrollAnimations() {
         rootMargin: '0px',
         threshold: 0.1
     };
-    
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                
-                // Trigger counter animation if it's a stat
-                if (entry.target.classList.contains('stat-item')) {
+
+                // Trigger counter animation if it's a stat card
+                if (entry.target.classList.contains('stat-card')) {
                     const counter = entry.target.querySelector('.stat-number');
                     if (counter && counter.dataset.count) {
                         animateCounter(counter);
@@ -82,7 +82,7 @@ function initScrollAnimations() {
             }
         });
     }, observerOptions);
-    
+
     // Observe all animate-on-scroll elements
     document.querySelectorAll('.animate-on-scroll').forEach(el => {
         observer.observe(el);
@@ -103,18 +103,18 @@ function animateCounter(element) {
     const steps = duration / stepTime;
     const increment = target / steps;
     let current = 0;
-    
+
     // Don't re-animate if already animated
     if (element.dataset.animated === 'true') return;
     element.dataset.animated = 'true';
-    
+
     const timer = setInterval(() => {
         current += increment;
         if (current >= target) {
             current = target;
             clearInterval(timer);
         }
-        
+
         // Format number with commas
         element.textContent = formatNumber(Math.floor(current));
     }, stepTime);
@@ -132,15 +132,15 @@ function formatNumber(num) {
    =================================== */
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
-            
+
             if (targetElement) {
                 const navbarHeight = document.getElementById('navbar').offsetHeight;
                 const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-                
+
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
@@ -155,14 +155,14 @@ function initSmoothScroll() {
    =================================== */
 function initContactForm() {
     const form = document.getElementById('contactForm');
-    
+
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            
+
             // Show loading state
             submitBtn.innerHTML = `
                 <span>Sending...</span>
@@ -171,10 +171,10 @@ function initContactForm() {
                 </svg>
             `;
             submitBtn.disabled = true;
-            
+
             // Simulate form submission (replace with actual API call)
             await new Promise(resolve => setTimeout(resolve, 1500));
-            
+
             // Show success state
             submitBtn.innerHTML = `
                 <span>Message Sent!</span>
@@ -183,10 +183,10 @@ function initContactForm() {
                 </svg>
             `;
             submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            
+
             // Reset form
             form.reset();
-            
+
             // Reset button after 3 seconds
             setTimeout(() => {
                 submitBtn.innerHTML = originalText;
@@ -202,10 +202,10 @@ function initContactForm() {
    =================================== */
 function initParallax() {
     const parallaxElements = document.querySelectorAll('[data-parallax]');
-    
+
     window.addEventListener('scroll', () => {
         const scrolled = window.pageYOffset;
-        
+
         parallaxElements.forEach(el => {
             const speed = parseFloat(el.dataset.parallax) || 0.5;
             const yPos = -(scrolled * speed);
@@ -246,20 +246,20 @@ document.head.appendChild(style);
 function initActiveNavHighlight() {
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-links a');
-    
+
     window.addEventListener('scroll', () => {
         let current = '';
         const navbarHeight = document.getElementById('navbar').offsetHeight;
-        
+
         sections.forEach(section => {
             const sectionTop = section.offsetTop - navbarHeight - 100;
             const sectionHeight = section.offsetHeight;
-            
+
             if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
                 current = section.getAttribute('id');
             }
         });
-        
+
         navLinks.forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === `#${current}`) {
